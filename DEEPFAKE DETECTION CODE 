@@ -1,0 +1,1451 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyN3QcFGZsb/isvbfMWpR7f/",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/dontcuttrees/DEEPFAKE-DETECTION/blob/main/DEEPFAKE%20DETECTION%20CODE%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 117,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "V8cqS5tUVb_N",
+        "outputId": "fc6ce97f-c4ee-41c8-df45-c7506a107a7f"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n"
+          ]
+        }
+      ],
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "os.listdir('/content/drive/MyDrive/Dataset for deepfake ')\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jiM2UNPmXhvx",
+        "outputId": "165c9ad1-3373-464e-8b79-bbae6fc11321"
+      },
+      "execution_count": 118,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "['archive (1).zip', 'archive (2).zip']"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 118
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!unzip -l \"/content/drive/MyDrive/Dataset for deepfake /archive (1).zip\" | head -20\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JcrSNNKLX1TY",
+        "outputId": "a16e6878-4408-432c-c7c5-b0c68085982e"
+      },
+      "execution_count": 119,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Archive:  /content/drive/MyDrive/Dataset for deepfake /archive (1).zip\n",
+            "  Length      Date    Time    Name\n",
+            "---------  ---------- -----   ----\n",
+            "  2345071  2023-04-12 08:37   Celeb-real/id0_0000.mp4\n",
+            "  1613400  2023-04-12 08:37   Celeb-real/id0_0001.mp4\n",
+            "  1674293  2023-04-12 08:37   Celeb-real/id0_0002.mp4\n",
+            "  2245929  2023-04-12 08:37   Celeb-real/id0_0003.mp4\n",
+            "  2287026  2023-04-12 08:37   Celeb-real/id0_0004.mp4\n",
+            "  2234678  2023-04-12 08:37   Celeb-real/id0_0005.mp4\n",
+            "  3636657  2023-04-12 08:37   Celeb-real/id0_0006.mp4\n",
+            "  2288528  2023-04-12 08:37   Celeb-real/id0_0007.mp4\n",
+            "  4404080  2023-04-12 08:37   Celeb-real/id0_0008.mp4\n",
+            "  2591761  2023-04-12 08:37   Celeb-real/id0_0009.mp4\n",
+            "  1101225  2023-04-12 08:37   Celeb-real/id10_0000.mp4\n",
+            "  1077088  2023-04-12 08:37   Celeb-real/id10_0001.mp4\n",
+            "  1157968  2023-04-12 08:37   Celeb-real/id10_0002.mp4\n",
+            "  1319032  2023-04-12 08:37   Celeb-real/id10_0003.mp4\n",
+            "  2309741  2023-04-12 08:37   Celeb-real/id10_0004.mp4\n",
+            "  1535960  2023-04-12 08:37   Celeb-real/id10_0005.mp4\n",
+            "  1232111  2023-04-12 08:37   Celeb-real/id10_0006.mp4\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!unzip -l \"/content/drive/MyDrive/Dataset for deepfake /archive (2).zip\" | head -20\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fY4w4KloYDZ9",
+        "outputId": "9430fe19-f779-40bd-e137-daa40582ebf8"
+      },
+      "execution_count": 120,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Archive:  /content/drive/MyDrive/Dataset for deepfake /archive (2).zip\n",
+            "  Length      Date    Time    Name\n",
+            "---------  ---------- -----   ----\n",
+            "  6745903  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_02__meeting_serious__YVGY8LOK.mp4\n",
+            "  5290755  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_02__outside_talking_still_laughing__YVGY8LOK.mp4\n",
+            "  3471524  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_02__talking_against_wall__YVGY8LOK.mp4\n",
+            "  1164071  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_02__walk_down_hall_angry__YVGY8LOK.mp4\n",
+            " 12640206  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_02__walking_down_indoor_hall_disgust__YVGY8LOK.mp4\n",
+            "  9123749  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_03__hugging_happy__ISF9SP4G.mp4\n",
+            "  3485507  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_03__kitchen_pan__JZUXXFRB.mp4\n",
+            "  5056283  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_03__podium_speech_happy__480LQD1C.mp4\n",
+            "  3489591  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_03__talking_against_wall__JZUXXFRB.mp4\n",
+            "  8246897  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_04__hugging_happy__GBC7ZGDP.mp4\n",
+            "  6563740  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_04__meeting_serious__0XUW13RW.mp4\n",
+            " 11514472  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_04__talking_angry_couch__0XUW13RW.mp4\n",
+            "  1212172  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_04__walk_down_hall_angry__GBC7ZGDP.mp4\n",
+            " 11673983  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_09__talking_angry_couch__P70H1JB0.mp4\n",
+            "  8847037  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_11__hugging_happy__4OJNJLOO.mp4\n",
+            "  6582803  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_11__meeting_serious__9OM3VE0Y.mp4\n",
+            "  6572942  2024-12-07 06:18   FaceForensics++_C23/DeepFakeDetection/01_11__meeting_serious__FCNL2OVP.mp4\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "os.makedirs(\"/content/drive/MyDrive/deepfake_project\", exist_ok=True)\n",
+        "\n",
+        "print(\"deepfake_project folder created!\")\n",
+        "\n",
+        "\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3YHXxJEkYU6_",
+        "outputId": "bdf92420-d880-4bc6-dfc5-d8c1dd818b2a"
+      },
+      "execution_count": 121,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "deepfake_project folder created!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "real_input = \"/content/drive/MyDrive/deepfake_project/real_subset/Celeb-real\"\n",
+        "\n",
+        "videos = os.listdir(real_input)\n",
+        "\n",
+        "print(\"Number of videos:\", len(videos))\n",
+        "print(\"First 5 videos:\", videos[:5])\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "b0965zugYitT",
+        "outputId": "3f82e383-2a59-49e8-c97a-439f48afcf88"
+      },
+      "execution_count": 122,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Number of videos: 10\n",
+            "First 5 videos: ['id0_0000.mp4', 'id0_0001.mp4', 'id0_0002.mp4', 'id0_0003.mp4', 'id0_0004.mp4']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!unzip \"/content/drive/MyDrive/Dataset for deepfake /archive (2).zip\" \"FaceForensics++_C23/DeepFakeDetection/01_0*\" -d \"/content/drive/MyDrive/deepfake_project/fake_subset\"\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "msWLAfpCZqn4",
+        "outputId": "3b0f4f3c-0f16-45af-b992-509386689414"
+      },
+      "execution_count": 123,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Archive:  /content/drive/MyDrive/Dataset for deepfake /archive (2).zip\n",
+            "replace /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__meeting_serious__YVGY8LOK.mp4? [y]es, [n]o, [A]ll, [N]one, [r]ename: A\n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__meeting_serious__YVGY8LOK.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__outside_talking_still_laughing__YVGY8LOK.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__talking_against_wall__YVGY8LOK.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__walk_down_hall_angry__YVGY8LOK.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_02__walking_down_indoor_hall_disgust__YVGY8LOK.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_03__hugging_happy__ISF9SP4G.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_03__kitchen_pan__JZUXXFRB.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_03__podium_speech_happy__480LQD1C.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_03__talking_against_wall__JZUXXFRB.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_04__hugging_happy__GBC7ZGDP.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_04__meeting_serious__0XUW13RW.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_04__talking_angry_couch__0XUW13RW.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_04__walk_down_hall_angry__GBC7ZGDP.mp4  \n",
+            "  inflating: /content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection/01_09__talking_angry_couch__P70H1JB0.mp4  \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "real_path = \"/content/drive/MyDrive/deepfake_project/real_subset/Celeb-real\"\n",
+        "fake_path = \"/content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection\"\n",
+        "\n",
+        "print(\"Number of real videos:\", len(os.listdir(real_path)))\n",
+        "print(\"Number of fake videos:\", len(os.listdir(fake_path)))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "q-0bTVMjaE4U",
+        "outputId": "3c29c116-00f5-47bc-ea87-22f0e6d2453d"
+      },
+      "execution_count": 124,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Number of real videos: 10\n",
+            "Number of fake videos: 14\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import cv2\n",
+        "import os\n",
+        "\n",
+        "def extract_frames_from_folder(real_input, output_folder, num_frames=10):\n",
+        "    # Create output folder if it doesn't exist\n",
+        "        os.makedirs(output_folder, exist_ok=True)\n",
+        "\n",
+        "            # List all video files\n",
+        "        videos = os.listdir(real_input)\n",
+        "\n",
+        "        for video in videos:\n",
+        "            video_path = os.path.join(real_input, video)\n",
+        "            cap = cv2.VideoCapture(video_path)\n",
+        "\n",
+        "            total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))\n",
+        "            interval = max(total // num_frames, 1)\n",
+        "\n",
+        "            video_name = video.split(\".\")[0]\n",
+        "            video_output_folder = os.path.join(output_folder, video_name)\n",
+        "            os.makedirs(video_output_folder, exist_ok=True)\n",
+        "\n",
+        "            count = 0\n",
+        "            saved = 0\n",
+        "            while cap.isOpened() and saved < num_frames:\n",
+        "                  ret, frame = cap.read()\n",
+        "                  if not ret:\n",
+        "                        break\n",
+        "\n",
+        "                  if count % interval == 0:\n",
+        "                        frame = cv2.resize(frame, (224, 224))\n",
+        "                        cv2.imwrite(\n",
+        "                              os.path.join(video_output_folder, f\"frame_{saved}.jpg\"),\n",
+        "                              frame\n",
+        "                        )\n",
+        "                        saved += 1\n",
+        "\n",
+        "                  count += 1\n",
+        "\n",
+        "        cap.release()\n",
+        "\n",
+        "print(\"Frame extraction complete.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "J8v_oMQFoSxp",
+        "outputId": "bac03aef-f7ce-4c35-9d76-0bfa30df98f5"
+      },
+      "execution_count": 125,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Frame extraction complete.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "real_input = \"/content/drive/MyDrive/deepfake_project/real_subset/Celeb-real\"\n",
+        "real_output = \"/content/drive/MyDrive/deepfake_project/real_frames\"\n",
+        "\n",
+        "extract_frames_from_folder(real_input, real_output)\n"
+      ],
+      "metadata": {
+        "id": "q-qyMnBouCXs"
+      },
+      "execution_count": 126,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "fake_input = \"/content/drive/MyDrive/deepfake_project/fake_subset/FaceForensics++_C23/DeepFakeDetection\"\n",
+        "fake_output = \"/content/drive/MyDrive/deepfake_project/fake_frames\"\n",
+        "\n",
+        "extract_frames_from_folder(fake_input, fake_output)\n"
+      ],
+      "metadata": {
+        "id": "hut24AijuR5p"
+      },
+      "execution_count": 127,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "print(\"Real frame folders:\", len(os.listdir(\"/content/drive/MyDrive/deepfake_project/real_frames\")))\n",
+        "print(\"Fake frame folders:\", len(os.listdir(\"/content/drive/MyDrive/deepfake_project/fake_frames\")))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1dUwY1xCvq9V",
+        "outputId": "32c8090b-bd32-44e5-83a5-2c1dee64905c"
+      },
+      "execution_count": 128,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Real frame folders: 10\n",
+            "Fake frame folders: 14\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "real_frames_path = \"/content/drive/MyDrive/deepfake_project/real_frames\"\n",
+        "fake_frames_path = \"/content/drive/MyDrive/deepfake_project/fake_frames\"\n",
+        "\n",
+        "print(\"Real videos:\", len(os.listdir(real_frames_path)))\n",
+        "print(\"Fake videos:\", len(os.listdir(fake_frames_path)))\n",
+        "\n",
+        "\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Pv6DldL7xC6Q",
+        "outputId": "ef224bca-1c62-44f9-d88e-d59b4e7dd7fa"
+      },
+      "execution_count": 129,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Real videos: 10\n",
+            "Fake videos: 14\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "from PIL import Image\n",
+        "import torch\n",
+        "from torch.utils.data import Dataset\n",
+        "from torchvision import transforms\n",
+        "\n",
+        "class FrameDataset(Dataset):\n",
+        "      def __init__(self, real_dir, fake_dir):\n",
+        "        self.samples = []\n",
+        "\n",
+        "        self.transform = transforms.Compose([\n",
+        "        transforms.ToTensor(),\n",
+        "        transforms.Normalize([0.485, 0.456, 0.406],\n",
+        "                           [0.229, 0.224, 0.225])\n",
+        "        ])\n",
+        "        # Real frames (label 0)\n",
+        "        for folder in os.listdir(real_dir):\n",
+        "          folder_path = os.path.join(real_dir, folder)\n",
+        "          for img in os.listdir(folder_path):\n",
+        "            self.samples.append((os.path.join(folder_path, img), 0))\n",
+        "       # Fake frames (label 1)\n",
+        "        for folder in os.listdir(fake_dir):\n",
+        "          folder_path = os.path.join(fake_dir, folder)\n",
+        "          for img in os.listdir(folder_path):\n",
+        "            self.samples.append((os.path.join(folder_path, img), 1))\n",
+        "      def __len__(self):\n",
+        "        return len(self.samples)\n",
+        "      def __getitem__(self, idx):\n",
+        "            img_path, label = self.samples[idx]\n",
+        "            image = Image.open(img_path).convert(\"RGB\")\n",
+        "            image = self.transform(image)\n",
+        "            return image, torch.tensor(label)\n"
+      ],
+      "metadata": {
+        "id": "jsc5myQNxXI_"
+      },
+      "execution_count": 130,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "real_frames = \"/content/drive/MyDrive/deepfake_project/real_frames\"\n",
+        "fake_frames = \"/content/drive/MyDrive/deepfake_project/fake_frames\"\n",
+        "\n",
+        "dataset = FrameDataset(real_frames, fake_frames)\n",
+        "\n",
+        "print(\"Total frames:\", len(dataset))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "QO4Q63tR0bzX",
+        "outputId": "653d43aa-0228-4c1d-8640-4d22de257f0b"
+      },
+      "execution_count": 131,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Total frames: 240\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from torch.utils.data import DataLoader\n",
+        "\n",
+        "dataloader = DataLoader(dataset, batch_size=16, shuffle=True)\n",
+        "\n",
+        "print(\"DataLoader ready.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bHjRSff808P3",
+        "outputId": "e8bc4efc-1cda-4daf-eb33-ea3bfe067015"
+      },
+      "execution_count": 132,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "DataLoader ready.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import torchvision.models as models\n",
+        "import torch.nn as nn\n",
+        "\n",
+        "model = models.resnet50(pretrained=True)\n",
+        "model.fc = nn.Linear(model.fc.in_features, 2)  # binary classification\n",
+        "\n",
+        "device = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n",
+        "model = model.to(device)\n",
+        "\n",
+        "print(\"Model ready.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xFCpiHpS1dMv",
+        "outputId": "2a5d3c3e-1ab4-4689-9f4d-90f567266ea0"
+      },
+      "execution_count": 133,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model ready.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import torch.optim as optim\n",
+        "\n",
+        "criterion = nn.CrossEntropyLoss()\n",
+        "optimizer = optim.Adam(model.parameters(), lr=0.0001)\n",
+        "\n",
+        "print(\"Loss and optimizer ready.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GfGN7Myu1m6A",
+        "outputId": "9ef4ce7d-ff05-4697-c917-0246ee782109"
+      },
+      "execution_count": 134,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Loss and optimizer ready.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.train()\n",
+        "\n",
+        "for images, labels in dataloader:\n",
+        "    images = images.to(device)\n",
+        "    labels = labels.to(device)\n",
+        "\n",
+        "    optimizer.zero_grad()\n",
+        "    outputs = model(images)\n",
+        "    loss = criterion(outputs, labels)\n",
+        "    loss.backward()\n",
+        "    optimizer.step()\n",
+        "\n",
+        "    print(\"Loss:\", loss.item())\n",
+        "    break  # only 1 batch test\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0U00H2eZ1tvJ",
+        "outputId": "4fc02831-00f0-4fa6-ea2c-10ff06b61cd7"
+      },
+      "execution_count": 135,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Loss: 0.6717574000358582\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.train()\n",
+        "\n",
+        "for epoch in range(3):  # train 3 epochs\n",
+        "  total_loss = 0\n",
+        "\n",
+        "  for images, labels in dataloader:\n",
+        "      images = images.to(device)\n",
+        "      labels = labels.to(device)\n",
+        "\n",
+        "      optimizer.zero_grad()\n",
+        "      outputs = model(images)\n",
+        "      loss = criterion(outputs, labels)\n",
+        "      loss.backward()\n",
+        "      optimizer.step()\n",
+        "\n",
+        "      total_loss += loss.item()\n",
+        "\n",
+        "  print(f\"Epoch {epoch+1}, Loss: {total_loss / len(dataloader)}\")\n"
+      ],
+      "metadata": {
+        "id": "ddB_EGM92Wz1",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "bd9991e8-1c85-460f-fe2f-33043fff7428"
+      },
+      "execution_count": 136,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Epoch 1, Loss: 0.10228878327955802\n",
+            "Epoch 2, Loss: 0.007704686423918853\n",
+            "Epoch 3, Loss: 0.01785690895630978\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.eval()\n",
+        "\n",
+        "correct = 0\n",
+        "total = 0\n",
+        "\n",
+        "with torch.no_grad():\n",
+        "    for images, labels in dataloader:\n",
+        "        images = images.to(device)\n",
+        "        labels = labels.to(device)\n",
+        "\n",
+        "        outputs = model(images)\n",
+        "        _, predicted = torch.max(outputs, 1)\n",
+        "\n",
+        "        total += labels.size(0)\n",
+        "        correct += (predicted == labels).sum().item()\n",
+        "\n",
+        "print(\"Accuracy:\", 100 * correct / total, \"%\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JgwPsIbi2_6h",
+        "outputId": "5b912ef8-e144-466d-ee1c-26ac0ddc3a3a"
+      },
+      "execution_count": 137,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Accuracy: 100.0 %\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from torch.utils.data import random_split\n",
+        "\n",
+        "train_size = int(0.8 * len(dataset))\n",
+        "val_size = len(dataset) - train_size\n",
+        "\n",
+        "train_dataset, val_dataset = random_split(dataset, [train_size, val_size])\n",
+        "\n",
+        "print(\"Train samples:\", len(train_dataset))\n",
+        "print(\"Validation samples:\", len(val_dataset))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "2uzpyJMJ5-Kd",
+        "outputId": "88159b06-5ed6-4b76-acf3-6b2d42a19543"
+      },
+      "execution_count": 138,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Train samples: 192\n",
+            "Validation samples: 48\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)\n",
+        "val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)\n"
+      ],
+      "metadata": {
+        "id": "q7d9Z5El6W4W"
+      },
+      "execution_count": 139,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for epoch in range(3):\n",
+        "    model.train()\n",
+        "    total_loss = 0\n",
+        "\n",
+        "    for images, labels in train_loader:\n",
+        "        images = images.to(device)\n",
+        "        labels = labels.to(device)\n",
+        "\n",
+        "        optimizer.zero_grad()\n",
+        "        outputs = model(images)\n",
+        "        loss = criterion(outputs, labels)\n",
+        "        loss.backward()\n",
+        "        optimizer.step()\n",
+        "\n",
+        "        total_loss += loss.item()\n",
+        "\n",
+        "print(f\"Epoch {epoch+1}, Train Loss: {total_loss / len(train_loader)}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "dYEFLKGl6ZTu",
+        "outputId": "7e3150f7-29db-4984-e665-5d7df197ca16"
+      },
+      "execution_count": 140,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Epoch 3, Train Loss: 0.0022553045758589483\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.eval()\n",
+        "\n",
+        "correct = 0\n",
+        "total = 0\n",
+        "\n",
+        "with torch.no_grad():\n",
+        "  for images, labels in val_loader:\n",
+        "      images = images.to(device)\n",
+        "      labels = labels.to(device)\n",
+        "\n",
+        "      outputs = model(images)\n",
+        "      _, predicted = torch.max(outputs, 1)\n",
+        "\n",
+        "      total += labels.size(0)\n",
+        "      correct += (predicted == labels).sum().item()\n",
+        "\n",
+        "accuracy = 100 * correct / total\n",
+        "print(\"Validation Accuracy:\", accuracy, \"%\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BGFHhrvw6xq_",
+        "outputId": "5b5339f4-94d6-41b4-af97-19737d048022"
+      },
+      "execution_count": 141,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Validation Accuracy: 100.0 %\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from PIL import Image\n",
+        "from torchvision import transforms\n",
+        "import torch.nn.functional as F\n",
+        "\n",
+        "def predict_image(image_path):\n",
+        "    transform = transforms.Compose([\n",
+        "       transforms.Resize((224, 224)),\n",
+        "       transforms.ToTensor(),\n",
+        "       transforms.Normalize([0.485, 0.456, 0.406],\n",
+        "                            [0.229, 0.224, 0.225])\n",
+        "     ])\n",
+        "\n",
+        "    image = Image.open(image_path).convert(\"RGB\")\n",
+        "    image = transform(image).unsqueeze(0).to(device)\n",
+        "\n",
+        "    model.eval()\n",
+        "    with torch.no_grad():\n",
+        "      output = model(image)\n",
+        "      probabilities = F.softmax(output, dim=1)\n",
+        "      confidence, predicted = torch.max(probabilities, 1)\n",
+        "\n",
+        "      label = \"REAL\" if predicted.item() == 0 else \"FAKE\"\n",
+        "\n",
+        "      return label, confidence.item() * 100\n"
+      ],
+      "metadata": {
+        "id": "jxX_NW1u9yRx"
+      },
+      "execution_count": 142,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files\n",
+        "\n",
+        "uploaded = files.upload()\n",
+        "image_path = list(uploaded.keys())[0]\n",
+        "\n",
+        "label, confidence = predict_image(image_path)\n",
+        "\n",
+        "print(\"Prediction:\", label)\n",
+        "print(\"Confidence:\", confidence, \"%\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 108
+        },
+        "id": "461tbEhP-poa",
+        "outputId": "e56dc27c-aa87-4cb6-fb0e-177519023102"
+      },
+      "execution_count": 143,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ],
+            "text/html": [
+              "\n",
+              "     <input type=\"file\" id=\"files-7054e5bc-19aa-44f1-b202-296c73f80d6a\" name=\"files[]\" multiple disabled\n",
+              "        style=\"border:none\" />\n",
+              "     <output id=\"result-7054e5bc-19aa-44f1-b202-296c73f80d6a\">\n",
+              "      Upload widget is only available when the cell has been executed in the\n",
+              "      current browser session. Please rerun this cell to enable.\n",
+              "      </output>\n",
+              "      <script>// Copyright 2017 Google LLC\n",
+              "//\n",
+              "// Licensed under the Apache License, Version 2.0 (the \"License\");\n",
+              "// you may not use this file except in compliance with the License.\n",
+              "// You may obtain a copy of the License at\n",
+              "//\n",
+              "//      http://www.apache.org/licenses/LICENSE-2.0\n",
+              "//\n",
+              "// Unless required by applicable law or agreed to in writing, software\n",
+              "// distributed under the License is distributed on an \"AS IS\" BASIS,\n",
+              "// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n",
+              "// See the License for the specific language governing permissions and\n",
+              "// limitations under the License.\n",
+              "\n",
+              "/**\n",
+              " * @fileoverview Helpers for google.colab Python module.\n",
+              " */\n",
+              "(function(scope) {\n",
+              "function span(text, styleAttributes = {}) {\n",
+              "  const element = document.createElement('span');\n",
+              "  element.textContent = text;\n",
+              "  for (const key of Object.keys(styleAttributes)) {\n",
+              "    element.style[key] = styleAttributes[key];\n",
+              "  }\n",
+              "  return element;\n",
+              "}\n",
+              "\n",
+              "// Max number of bytes which will be uploaded at a time.\n",
+              "const MAX_PAYLOAD_SIZE = 100 * 1024;\n",
+              "\n",
+              "function _uploadFiles(inputId, outputId) {\n",
+              "  const steps = uploadFilesStep(inputId, outputId);\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  // Cache steps on the outputElement to make it available for the next call\n",
+              "  // to uploadFilesContinue from Python.\n",
+              "  outputElement.steps = steps;\n",
+              "\n",
+              "  return _uploadFilesContinue(outputId);\n",
+              "}\n",
+              "\n",
+              "// This is roughly an async generator (not supported in the browser yet),\n",
+              "// where there are multiple asynchronous steps and the Python side is going\n",
+              "// to poll for completion of each step.\n",
+              "// This uses a Promise to block the python side on completion of each step,\n",
+              "// then passes the result of the previous step as the input to the next step.\n",
+              "function _uploadFilesContinue(outputId) {\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  const steps = outputElement.steps;\n",
+              "\n",
+              "  const next = steps.next(outputElement.lastPromiseValue);\n",
+              "  return Promise.resolve(next.value.promise).then((value) => {\n",
+              "    // Cache the last promise value to make it available to the next\n",
+              "    // step of the generator.\n",
+              "    outputElement.lastPromiseValue = value;\n",
+              "    return next.value.response;\n",
+              "  });\n",
+              "}\n",
+              "\n",
+              "/**\n",
+              " * Generator function which is called between each async step of the upload\n",
+              " * process.\n",
+              " * @param {string} inputId Element ID of the input file picker element.\n",
+              " * @param {string} outputId Element ID of the output display.\n",
+              " * @return {!Iterable<!Object>} Iterable of next steps.\n",
+              " */\n",
+              "function* uploadFilesStep(inputId, outputId) {\n",
+              "  const inputElement = document.getElementById(inputId);\n",
+              "  inputElement.disabled = false;\n",
+              "\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  outputElement.innerHTML = '';\n",
+              "\n",
+              "  const pickedPromise = new Promise((resolve) => {\n",
+              "    inputElement.addEventListener('change', (e) => {\n",
+              "      resolve(e.target.files);\n",
+              "    });\n",
+              "  });\n",
+              "\n",
+              "  const cancel = document.createElement('button');\n",
+              "  inputElement.parentElement.appendChild(cancel);\n",
+              "  cancel.textContent = 'Cancel upload';\n",
+              "  const cancelPromise = new Promise((resolve) => {\n",
+              "    cancel.onclick = () => {\n",
+              "      resolve(null);\n",
+              "    };\n",
+              "  });\n",
+              "\n",
+              "  // Wait for the user to pick the files.\n",
+              "  const files = yield {\n",
+              "    promise: Promise.race([pickedPromise, cancelPromise]),\n",
+              "    response: {\n",
+              "      action: 'starting',\n",
+              "    }\n",
+              "  };\n",
+              "\n",
+              "  cancel.remove();\n",
+              "\n",
+              "  // Disable the input element since further picks are not allowed.\n",
+              "  inputElement.disabled = true;\n",
+              "\n",
+              "  if (!files) {\n",
+              "    return {\n",
+              "      response: {\n",
+              "        action: 'complete',\n",
+              "      }\n",
+              "    };\n",
+              "  }\n",
+              "\n",
+              "  for (const file of files) {\n",
+              "    const li = document.createElement('li');\n",
+              "    li.append(span(file.name, {fontWeight: 'bold'}));\n",
+              "    li.append(span(\n",
+              "        `(${file.type || 'n/a'}) - ${file.size} bytes, ` +\n",
+              "        `last modified: ${\n",
+              "            file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() :\n",
+              "                                    'n/a'} - `));\n",
+              "    const percent = span('0% done');\n",
+              "    li.appendChild(percent);\n",
+              "\n",
+              "    outputElement.appendChild(li);\n",
+              "\n",
+              "    const fileDataPromise = new Promise((resolve) => {\n",
+              "      const reader = new FileReader();\n",
+              "      reader.onload = (e) => {\n",
+              "        resolve(e.target.result);\n",
+              "      };\n",
+              "      reader.readAsArrayBuffer(file);\n",
+              "    });\n",
+              "    // Wait for the data to be ready.\n",
+              "    let fileData = yield {\n",
+              "      promise: fileDataPromise,\n",
+              "      response: {\n",
+              "        action: 'continue',\n",
+              "      }\n",
+              "    };\n",
+              "\n",
+              "    // Use a chunked sending to avoid message size limits. See b/62115660.\n",
+              "    let position = 0;\n",
+              "    do {\n",
+              "      const length = Math.min(fileData.byteLength - position, MAX_PAYLOAD_SIZE);\n",
+              "      const chunk = new Uint8Array(fileData, position, length);\n",
+              "      position += length;\n",
+              "\n",
+              "      const base64 = btoa(String.fromCharCode.apply(null, chunk));\n",
+              "      yield {\n",
+              "        response: {\n",
+              "          action: 'append',\n",
+              "          file: file.name,\n",
+              "          data: base64,\n",
+              "        },\n",
+              "      };\n",
+              "\n",
+              "      let percentDone = fileData.byteLength === 0 ?\n",
+              "          100 :\n",
+              "          Math.round((position / fileData.byteLength) * 100);\n",
+              "      percent.textContent = `${percentDone}% done`;\n",
+              "\n",
+              "    } while (position < fileData.byteLength);\n",
+              "  }\n",
+              "\n",
+              "  // All done.\n",
+              "  yield {\n",
+              "    response: {\n",
+              "      action: 'complete',\n",
+              "    }\n",
+              "  };\n",
+              "}\n",
+              "\n",
+              "scope.google = scope.google || {};\n",
+              "scope.google.colab = scope.google.colab || {};\n",
+              "scope.google.colab._files = {\n",
+              "  _uploadFiles,\n",
+              "  _uploadFilesContinue,\n",
+              "};\n",
+              "})(self);\n",
+              "</script> "
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Saving images (1).webp to images (1) (2).webp\n",
+            "Prediction: REAL\n",
+            "Confidence: 99.91239905357361 %\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "true_label = 0  # 0 for REAL, 1 for FAKE\n",
+        "\n",
+        "predicted_label = 0 if label == \"REAL\" else 1\n",
+        "\n",
+        "if predicted_label == true_label:\n",
+        "    print(\"Correct prediction\")\n",
+        "else:\n",
+        "    print(\"Wrong prediction\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mAWN18ye_BcX",
+        "outputId": "eecb0f37-dd9f-4b0d-c206-1f61bfa8ae28"
+      },
+      "execution_count": 144,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Correct prediction\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files\n",
+        "\n",
+        "uploaded = files.upload()\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 142
+        },
+        "id": "VkbndqkB_srA",
+        "outputId": "a20ae54e-cfaa-46a4-c51b-3c51f2b507bf"
+      },
+      "execution_count": 145,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ],
+            "text/html": [
+              "\n",
+              "     <input type=\"file\" id=\"files-082d783b-6455-4d42-b6e7-ac3f3048ac8d\" name=\"files[]\" multiple disabled\n",
+              "        style=\"border:none\" />\n",
+              "     <output id=\"result-082d783b-6455-4d42-b6e7-ac3f3048ac8d\">\n",
+              "      Upload widget is only available when the cell has been executed in the\n",
+              "      current browser session. Please rerun this cell to enable.\n",
+              "      </output>\n",
+              "      <script>// Copyright 2017 Google LLC\n",
+              "//\n",
+              "// Licensed under the Apache License, Version 2.0 (the \"License\");\n",
+              "// you may not use this file except in compliance with the License.\n",
+              "// You may obtain a copy of the License at\n",
+              "//\n",
+              "//      http://www.apache.org/licenses/LICENSE-2.0\n",
+              "//\n",
+              "// Unless required by applicable law or agreed to in writing, software\n",
+              "// distributed under the License is distributed on an \"AS IS\" BASIS,\n",
+              "// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n",
+              "// See the License for the specific language governing permissions and\n",
+              "// limitations under the License.\n",
+              "\n",
+              "/**\n",
+              " * @fileoverview Helpers for google.colab Python module.\n",
+              " */\n",
+              "(function(scope) {\n",
+              "function span(text, styleAttributes = {}) {\n",
+              "  const element = document.createElement('span');\n",
+              "  element.textContent = text;\n",
+              "  for (const key of Object.keys(styleAttributes)) {\n",
+              "    element.style[key] = styleAttributes[key];\n",
+              "  }\n",
+              "  return element;\n",
+              "}\n",
+              "\n",
+              "// Max number of bytes which will be uploaded at a time.\n",
+              "const MAX_PAYLOAD_SIZE = 100 * 1024;\n",
+              "\n",
+              "function _uploadFiles(inputId, outputId) {\n",
+              "  const steps = uploadFilesStep(inputId, outputId);\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  // Cache steps on the outputElement to make it available for the next call\n",
+              "  // to uploadFilesContinue from Python.\n",
+              "  outputElement.steps = steps;\n",
+              "\n",
+              "  return _uploadFilesContinue(outputId);\n",
+              "}\n",
+              "\n",
+              "// This is roughly an async generator (not supported in the browser yet),\n",
+              "// where there are multiple asynchronous steps and the Python side is going\n",
+              "// to poll for completion of each step.\n",
+              "// This uses a Promise to block the python side on completion of each step,\n",
+              "// then passes the result of the previous step as the input to the next step.\n",
+              "function _uploadFilesContinue(outputId) {\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  const steps = outputElement.steps;\n",
+              "\n",
+              "  const next = steps.next(outputElement.lastPromiseValue);\n",
+              "  return Promise.resolve(next.value.promise).then((value) => {\n",
+              "    // Cache the last promise value to make it available to the next\n",
+              "    // step of the generator.\n",
+              "    outputElement.lastPromiseValue = value;\n",
+              "    return next.value.response;\n",
+              "  });\n",
+              "}\n",
+              "\n",
+              "/**\n",
+              " * Generator function which is called between each async step of the upload\n",
+              " * process.\n",
+              " * @param {string} inputId Element ID of the input file picker element.\n",
+              " * @param {string} outputId Element ID of the output display.\n",
+              " * @return {!Iterable<!Object>} Iterable of next steps.\n",
+              " */\n",
+              "function* uploadFilesStep(inputId, outputId) {\n",
+              "  const inputElement = document.getElementById(inputId);\n",
+              "  inputElement.disabled = false;\n",
+              "\n",
+              "  const outputElement = document.getElementById(outputId);\n",
+              "  outputElement.innerHTML = '';\n",
+              "\n",
+              "  const pickedPromise = new Promise((resolve) => {\n",
+              "    inputElement.addEventListener('change', (e) => {\n",
+              "      resolve(e.target.files);\n",
+              "    });\n",
+              "  });\n",
+              "\n",
+              "  const cancel = document.createElement('button');\n",
+              "  inputElement.parentElement.appendChild(cancel);\n",
+              "  cancel.textContent = 'Cancel upload';\n",
+              "  const cancelPromise = new Promise((resolve) => {\n",
+              "    cancel.onclick = () => {\n",
+              "      resolve(null);\n",
+              "    };\n",
+              "  });\n",
+              "\n",
+              "  // Wait for the user to pick the files.\n",
+              "  const files = yield {\n",
+              "    promise: Promise.race([pickedPromise, cancelPromise]),\n",
+              "    response: {\n",
+              "      action: 'starting',\n",
+              "    }\n",
+              "  };\n",
+              "\n",
+              "  cancel.remove();\n",
+              "\n",
+              "  // Disable the input element since further picks are not allowed.\n",
+              "  inputElement.disabled = true;\n",
+              "\n",
+              "  if (!files) {\n",
+              "    return {\n",
+              "      response: {\n",
+              "        action: 'complete',\n",
+              "      }\n",
+              "    };\n",
+              "  }\n",
+              "\n",
+              "  for (const file of files) {\n",
+              "    const li = document.createElement('li');\n",
+              "    li.append(span(file.name, {fontWeight: 'bold'}));\n",
+              "    li.append(span(\n",
+              "        `(${file.type || 'n/a'}) - ${file.size} bytes, ` +\n",
+              "        `last modified: ${\n",
+              "            file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() :\n",
+              "                                    'n/a'} - `));\n",
+              "    const percent = span('0% done');\n",
+              "    li.appendChild(percent);\n",
+              "\n",
+              "    outputElement.appendChild(li);\n",
+              "\n",
+              "    const fileDataPromise = new Promise((resolve) => {\n",
+              "      const reader = new FileReader();\n",
+              "      reader.onload = (e) => {\n",
+              "        resolve(e.target.result);\n",
+              "      };\n",
+              "      reader.readAsArrayBuffer(file);\n",
+              "    });\n",
+              "    // Wait for the data to be ready.\n",
+              "    let fileData = yield {\n",
+              "      promise: fileDataPromise,\n",
+              "      response: {\n",
+              "        action: 'continue',\n",
+              "      }\n",
+              "    };\n",
+              "\n",
+              "    // Use a chunked sending to avoid message size limits. See b/62115660.\n",
+              "    let position = 0;\n",
+              "    do {\n",
+              "      const length = Math.min(fileData.byteLength - position, MAX_PAYLOAD_SIZE);\n",
+              "      const chunk = new Uint8Array(fileData, position, length);\n",
+              "      position += length;\n",
+              "\n",
+              "      const base64 = btoa(String.fromCharCode.apply(null, chunk));\n",
+              "      yield {\n",
+              "        response: {\n",
+              "          action: 'append',\n",
+              "          file: file.name,\n",
+              "          data: base64,\n",
+              "        },\n",
+              "      };\n",
+              "\n",
+              "      let percentDone = fileData.byteLength === 0 ?\n",
+              "          100 :\n",
+              "          Math.round((position / fileData.byteLength) * 100);\n",
+              "      percent.textContent = `${percentDone}% done`;\n",
+              "\n",
+              "    } while (position < fileData.byteLength);\n",
+              "  }\n",
+              "\n",
+              "  // All done.\n",
+              "  yield {\n",
+              "    response: {\n",
+              "      action: 'complete',\n",
+              "    }\n",
+              "  };\n",
+              "}\n",
+              "\n",
+              "scope.google = scope.google || {};\n",
+              "scope.google.colab = scope.google.colab || {};\n",
+              "scope.google.colab._files = {\n",
+              "  _uploadFiles,\n",
+              "  _uploadFilesContinue,\n",
+              "};\n",
+              "})(self);\n",
+              "</script> "
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Saving images (1).webp to images (1) (3).webp\n",
+            "Saving Convex_lens_(magnifying_glass)_and_upside-down_image.jpg to Convex_lens_(magnifying_glass)_and_upside-down_image (1).jpg\n",
+            "Saving images.webp to images (3).webp\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Get uploaded filenames\n",
+        "image_paths = list(uploaded.keys())\n",
+        "\n",
+        "print(\"Uploaded files:\", image_paths)\n",
+        "\n",
+        "# IMPORTANT:\n",
+        "# For each image, set the true label\n",
+        "# 0 = REAL\n",
+        "# 1 = FAKE\n",
+        "\n",
+        "test_images = [\n",
+        "    (image_paths[0], 0),  # change 0 or 1 accordingly\n",
+        "    (image_paths[1], 1),\n",
+        "    (image_paths[2], 0)\n",
+        "]\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "NBo9jk4wA6GL",
+        "outputId": "d9372397-bc96-427a-a755-b16a0c87b43a"
+      },
+      "execution_count": 146,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Uploaded files: ['images (1) (3).webp', 'Convex_lens_(magnifying_glass)_and_upside-down_image (1).jpg', 'images (3).webp']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "correct = 0\n",
+        "total = len(test_images)\n",
+        "\n",
+        "for path, true_label in test_images:\n",
+        "    label, confidence = predict_image(path)\n",
+        "    predicted_label = 0 if label == \"REAL\" else 1\n",
+        "\n",
+        "    print(f\"\\nImage: {path}\")\n",
+        "    print(\"Prediction:\", label)\n",
+        "    print(\"Confidence:\", f\"{confidence:.2f}%\")\n",
+        "    print(\"True Label:\", \"REAL\" if true_label == 0 else \"FAKE\")\n",
+        "\n",
+        "    if predicted_label == true_label:\n",
+        "       print(\"Result: ✅ Correct\")\n",
+        "       correct += 1\n",
+        "    else:\n",
+        "       print(\"Result: ❌ Wrong\")\n",
+        "\n",
+        "accuracy = 100 * correct / total\n",
+        "print(\"\\nFinal Test Accuracy:\", accuracy, \"%\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ZQPG1VImBUp3",
+        "outputId": "4a725821-6a66-40bf-a28e-97be1292b6de"
+      },
+      "execution_count": 147,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Image: images (1) (3).webp\n",
+            "Prediction: REAL\n",
+            "Confidence: 99.91%\n",
+            "True Label: REAL\n",
+            "Result: ✅ Correct\n",
+            "\n",
+            "Image: Convex_lens_(magnifying_glass)_and_upside-down_image (1).jpg\n",
+            "Prediction: REAL\n",
+            "Confidence: 92.24%\n",
+            "True Label: FAKE\n",
+            "Result: ❌ Wrong\n",
+            "\n",
+            "Image: images (3).webp\n",
+            "Prediction: REAL\n",
+            "Confidence: 92.70%\n",
+            "True Label: REAL\n",
+            "Result: ✅ Correct\n",
+            "\n",
+            "Final Test Accuracy: 66.66666666666667 %\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
